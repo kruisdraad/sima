@@ -26,8 +26,8 @@ class ScanCommand extends Command
 
         $this->addArgument('path', inputArgument::REQUIRED, 'Specifies the path to scan for files placed by Amavis' );
 
-        $this->addOption('debug', '-d', inputOption::VALUE_NONE, 'Enables debug mode' );
-        $this->addOption('filter', '-f', inputOption::VALUE_NONE, 'Enables filter mode' );
+        $this->addOption('debug', 'd', inputOption::VALUE_NONE, 'Enables debug mode' );
+        $this->addOption('filter', 'f', inputOption::VALUE_NONE, 'Enables filter mode' );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
