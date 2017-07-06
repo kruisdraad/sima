@@ -45,8 +45,16 @@ class ShowCommand extends Command
             $fields = [
 		'Hash' 		=> 'hash',
                 'Filename'	=> 'name',
+                'Filesize'      => 'size',
+                'Extension'     => 'extension',
+                'MIME Extension'=> 'mime_extension',
+                'MIME Detected' => 'mime_detected',
                 'First seen'	=> 'first_seen',
-                'Count'		=> 'last_seen',
+                'Last seen'     => 'last_seen',
+                'Count'		=> 'count',
+                'Policies'	=> 'TODO',
+		'whitelisted'   => 'whitelisted',
+                'blacklisted'   => 'blacklisted',
 	    ];
             $rows = [];
 
