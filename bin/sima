@@ -1,0 +1,81 @@
+#!/usr/bin/env php
+<?php
+
+date_default_timezone_set("UTC");
+
+$files = array(
+  __DIR__ . '/../../vendor/autoload.php',
+  __DIR__ . '/../../../../autoload.php',
+  __DIR__ . '/../../../autoload.php',
+  '../vendor/autoload.php',
+  'vendor/autoload.php',  
+);
+
+
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        require $file;
+        define('COMPOSER_INSTALLED', 1);
+        break;
+    }
+}
+
+// check if autoloader is present
+if(!defined('COMPOSER_INSTALLED'))
+	die('Install Composer dependencies first, autoloader not found.');
+
+use Symfony\Component\Console\Application;
+use Illuminate\Database\Capsule\Manager as DB;
+use Sima\Console\Config\ConfigurationBuilder;
+
+const NAME = 'Scan Inventory for Mail Attachments';
+const VERSION = '1.0.0';
+
+/*
+ * Construct application configuration
+ */
+$builder = new ConfigurationBuilder();
+$configuration = $builder->make();
+
+
+
+/*
+ * Construct application configuration
+ */
+$capsule = new DB; 
+$capsule->addConnection($configuration['database']);
+$capsule->bootEloquent();
+$capsule->setAsGlobal();
+
+
+
+/*
+ * Construct application and register commands
+ */
+$application = new Application(NAME, VERSION);
+
+$application->addCommands(array(
+    new Sima\Console\Command\CollectCommand(),
+    new Sima\Console\Command\SearchCommand(),
+    new Sima\Console\Command\MarkCommand(),
+    new Sima\Console\Command\ScanCommand(),
+    new Sima\Console\Command\ShowCommand(),
+));
+
+
+
+/*
+ * Simplify access to commands with symlinks
+ */
+$selfCommand = $_SERVER['PHP_SELF'];
+if(is_link($selfCommand)) {
+  $application->setDefaultCommand(basename($selfCommand), true);
+}
+
+
+
+/*
+ * Run the application
+ */
+$application->run();
+

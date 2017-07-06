@@ -1,0 +1,16 @@
+sima:
+    extensions:
+        - zip
+        - pdf
+        - doc
+        - docx
+        - xls
+        - xlsx
+        - exe
+        - com
+        - bat
+        - dll
+        - scr
+        - sh
+        - pl
+
