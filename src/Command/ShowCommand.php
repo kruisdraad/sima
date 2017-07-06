@@ -59,9 +59,11 @@ class ShowCommand extends Command
             $rows = [];
 
             foreach($fields as $friendlyName => $name) {
-                $rows[] = [
-                    $friendlyName, $SimaFile->$name
-                ];
+                if ($name === 'name') {
+                    $rows[] = [ $friendlyName, implode(',', array_keys(json_decode($SimaFile->name, true))) ];
+                } else {
+                    $rows[] = [ $friendlyName, $SimaFile->$name ];
+                }
             }
 
             $table->setRows($rows);

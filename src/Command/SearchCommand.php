@@ -62,7 +62,7 @@ class SearchCommand extends Command
             foreach($SimaFile->get() as $file) {
                 $rows[] = [
                     $file->hash,
-                    $file->name,
+                    implode(',', array_keys(json_decode($file->name, true))),
                     $file->last_seen,
                     $file->count,
                 ];

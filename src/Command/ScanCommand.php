@@ -74,12 +74,12 @@ class ScanCommand extends Command
 
             if ($SimaFile->count() === 0) {
 
-                $this->debugLog("- File {$file->file} is new, adding profile");
+                $this->debugLog("- File hash {$file->hash} is new, adding profile");
 
 
                 $SimaFile = new SimaFile();
 
-                $SimaFile->name            = $file->file;
+                $SimaFile->name            = json_encode([$file->file => true]);
                 $SimaFile->extension       = $file->extension;
                 $SimaFile->hash            = $file->hash;
                 $SimaFile->mime_extension  = $file->mime;
@@ -90,9 +90,14 @@ class ScanCommand extends Command
 
             } elseif ($SimaFile->count() === 1) {
 
-                $this->debugLog("- File {$file->file} is exists, adding to counter");
+                $this->debugLog("- File hash {$file->hash} is exists, adding to counter");
 
                 $SimaFile = $SimaFile[0];
+
+                $knownFiles = json_decode($SimaFile->name, true);
+                $newFiles = [ $file->file => true];
+                
+		$SimeFile->name = array_merge($knownFiles, $newFiles);
 
                 $SimaFile->count++;
 
