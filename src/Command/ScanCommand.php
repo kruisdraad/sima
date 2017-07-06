@@ -15,12 +15,19 @@ class ScanCommand extends Command
 {
     private $configuration;
 
+    private $debugMode = false;
+
+    private $filterMode = false;
+
     protected function configure()
     {
         $this->setName('scan');
         $this->setDescription('Scans a file or directory and collects hashes');
 
-        $this->addArgument('path', inputArgument::REQUIRED, 'specifies the path to scan for files placed by Amavis' );
+        $this->addArgument('path', inputArgument::REQUIRED, 'Specifies the path to scan for files placed by Amavis' );
+
+        $this->addOption('debug', '-d', inputOption::VALUE_NONE, 'Enables debug mode' );
+        $this->addOption('filter', '-f', inputOption::VALUE_NONE, 'Enables filter mode' );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -28,11 +35,32 @@ class ScanCommand extends Command
         global $configuration;
         $this->configuration = $configuration;
 
+        if($input->getOption('debug')) {
+            $this->debugMode = true;
+        }
+
+        if($input->getOption('filter')) {
+            $this->debugLog("* Scan starting WITH FILTER POLICY ENABLED");
+        } else {
+            $this->debugLog("* Scan starting");
+        }
+
         $path = $input->getArgument('path');
-        
+        $this->debugLog("* Path {$path} has been selected for scanning");
+
+        $this->debugLog("* Building file list filter based on " . implode(',', $configuration['scan']['extensions']));
         $extensions = $this->getFilesFilter($configuration['scan']['extensions']);
 
         $this->startScan($path, $extensions);
+
+        $this->debugLog('* Scan complete');
+    }
+
+    private function debugLog($msg)
+    {
+        if($this->debugMode) {
+            echo $msg . PHP_EOL;
+        }
     }
 
     private function startScan($path, $filter)
@@ -40,9 +68,14 @@ class ScanCommand extends Command
         $files = $this->getFiles($path, $filter);
 
 	foreach($files as $file) {
+            $this->debugLog("* File {$file->file} has been selected for scanning");
+
 	    $SimaFile = SimaFile::where('hash', '=', $file->hash, 'AND')->get();
 
             if ($SimaFile->count() === 0) {
+
+                $this->debugLog("- File {$file->file} is new, adding profile");
+
 
                 $SimaFile = new SimaFile();
 
@@ -56,6 +89,8 @@ class ScanCommand extends Command
                 $SimaFile->save();
 
             } elseif ($SimaFile->count() === 1) {
+
+                $this->debugLog("- File {$file->file} is exists, adding to counter");
 
                 $SimaFile = $SimaFile[0];
 
