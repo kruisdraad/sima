@@ -21,7 +21,6 @@ class ScanCommand extends Command
         $this->setDescription('Scans a file or directory and collects hashes');
 
         $this->addArgument('path', inputArgument::REQUIRED, 'specifies the path to scan for files placed by Amavis' );
-	$this->addArgument('extensions', inputArgument::IS_ARRAY | inputArgument::REQUIRED, 'filtered extensions' );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,7 +30,7 @@ class ScanCommand extends Command
 
         $path = $input->getArgument('path');
         
-        $extensions = $this->getFilesFilter($input->getArgument('extensions'));
+        $extensions = $this->getFilesFilter($configuration['scan']['extensions']);
 
         $this->startScan($path, $extensions);
     }
@@ -76,10 +75,14 @@ class ScanCommand extends Command
     private function getFilesFilter($extensions)
     {
 	$regex = '';
-	
+
 	foreach($extensions as $extension) {
+
+            if ($extension === 'ALLFILES') {
+                return '/(.*)/';
+            }
             
-            $regex .= preg_quote($extension) . "|";
+            $regex .= '.' . preg_quote($extension) . '|';
         }
 
 	$filter = '/(' . substr($regex, 0, -1) . ')$/';

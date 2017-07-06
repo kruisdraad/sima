@@ -73,7 +73,6 @@ if(is_link($selfCommand)) {
 }
 
 
-
 /*
  * Run the application
  */
