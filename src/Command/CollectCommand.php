@@ -7,11 +7,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sima\Console\Models\File as SimaFile;
 use Virustotal;
 
 class CollectCommand extends Command
 {
     private $config;
+
+    private $apiKey;
 
     protected function configure()
     {
@@ -23,30 +26,53 @@ class CollectCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         global $configuration;
-        $this->configuration = $configuration;
+        $this->apiKey = $configuration['avtotal']['apikey'];
 
-        $report = $this->getVirustotalReport($file->hash);
+        /*
+         * We select all files that have not been checked AND everything not older then 48 hours.
+         * Anything that was scanned before, but younger then 48 hours will be scanned if the results
+         * are older then 1 hour and only if the API has enough request left (rate limited !)
+         */
 
-            if ($report) {
-echo "{$report['positives']} / {$report['total']}" . PHP_EOL;
+        $SimaFile = SimaFile::where('scan_time', '=', null)
+		->where('scan_time', '<=', date('Y-m-d H:i:s', (time() - 3600)), 'OR');
 
-                $summary = '';
+        if ($SimaFile->count() === 0) {
+            echo "No new hashes to request at Virustotal" . PHP_EOL;
 
-                foreach($report['scans'] as $scanner => $scanData) {
-                    if ($scanData['detected']) {
-                        $summary .= "{$scanner}({$scanData['result']}) ";
+            return false;
+        } else {
+            foreach($SimaFile->get() as $file) {
+
+                echo "Requesting data for hash {$file->hash}" . PHP_EOL;
+     
+                $report = $this->getVirustotalReport($file->hash);
+
+                if ($report) {
+                    $file->detection_rate = "{$report['positives']} / {$report['total']}";
+
+                    $summary = [];
+
+                    foreach($report['scans'] as $scanner => $scanData) {
+                        if ($scanData['detected']) {
+                            $summary[$scanner] = $scanData['result'];
+                        }
                     }
+                    $file->scan_results = json_encode($summary);
                 }
-echo $summary . PHP_EOL;
+
+                $file->scan_time = date('Y-m-d H:i:s');
+                $file->save();
+            }
 	}
     }
 
     private function getVirustotalReport($resource)
     {
+        //uncomment this to make everything look bad
 	//$resource = 'a771e484736b4ee8f478dfaa3d5194c10b9f983db86e02601d09a4e8c721a1e0';
-	$apiKey = '';
-        $file = new \VirusTotal\File($apiKey);
-	$response = $file->getReport($resource);
+        $api = new \VirusTotal\File($this->apiKey);
+	$response = $api->getReport($resource);
 
 	if ($response['response_code'] == '0') {
 	    return false;

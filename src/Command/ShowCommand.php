@@ -43,24 +43,36 @@ class ShowCommand extends Command
             $table->setHeaders(['Key', 'Value',]);
 
             $fields = [
-		'Hash' 		=> 'hash',
-                'Filename'	=> 'name',
-                'Filesize'      => 'size',
-                'Extension'     => 'extension',
-                'MIME Extension'=> 'mime_extension',
-                'MIME Detected' => 'mime_detected',
-                'First seen'	=> 'first_seen',
-                'Last seen'     => 'last_seen',
-                'Count'		=> 'count',
-                'Policies'	=> 'TODO',
-		'whitelisted'   => 'whitelisted',
-                'blacklisted'   => 'blacklisted',
+		'Hash' 		  => 'hash',
+                'Filename'	  => 'name',
+                'Filesize'        => 'size',
+                'Extension'       => 'extension',
+                'MIME Extension'  => 'mime_extension',
+                'MIME Detected'   => 'mime_detected',
+                'First seen'	  => 'first_seen',
+                'Last seen'       => 'last_seen',
+                'Count'		  => 'count',
+                'Scan Time'       => 'scan_time',
+                'Detection Rate'  => 'detection_rate',
+                'Scanner Results' => 'scan_results',
+                'Policies'  	  => 'TODO',
+		'whitelisted'     => 'whitelisted',
+                'blacklisted'     => 'blacklisted',
 	    ];
             $rows = [];
 
             foreach($fields as $friendlyName => $name) {
                 if ($name === 'name') {
                     $rows[] = [ $friendlyName, implode(',', array_keys(json_decode($SimaFile->name, true))) ];
+                } elseif ($name === 'scan_results') {
+                    $scanResults = '';
+
+                    $avData = json_decode($SimaFile->scan_results, true);
+                    foreach ($avData as $scannerName => $scannerReport) {
+                        $scanResults .= "{$scannerName} ({$scannerReport})" . PHP_EOL;
+                    }
+
+                    $rows[] = [ $friendlyName, implode(PHP_EOL, array_keys($avData)), implode(PHP_EOL, array_values($avData)) ];
                 } else {
                     $rows[] = [ $friendlyName, $SimaFile->$name ];
                 }

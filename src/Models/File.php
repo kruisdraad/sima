@@ -23,6 +23,9 @@ class File extends Model
         'whitelisted',
         'blacklisted',
         'count',
+        'scan_results',
+        'detection_rate',
+        'scan_time',
     ];
 
 }
