@@ -76,7 +76,7 @@ class CollectCommand extends Command
             $api = new \VirusTotal\File($this->apiKey);
             $response = $api->getReport($resource);
         } catch(\Exception $e) {
-            die('No more API calls left, try again later');
+            die('No more API calls left, try again later'.PHP_EOL);
 		//error_log($e->getMessage());
         } 
 

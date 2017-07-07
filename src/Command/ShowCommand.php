@@ -68,11 +68,11 @@ class ShowCommand extends Command
                     $scanResults = '';
 
                     $avData = json_decode($SimaFile->scan_results, true);
-                    foreach ($avData as $scannerName => $scannerReport) {
-                        $scanResults .= "{$scannerName} ({$scannerReport})" . PHP_EOL;
+
+                    if(is_array($avData)) {
+                        $rows[] = [ $friendlyName, implode(PHP_EOL, array_keys($avData)), implode(PHP_EOL, array_values($avData)) ];
                     }
 
-                    $rows[] = [ $friendlyName, implode(PHP_EOL, array_keys($avData)), implode(PHP_EOL, array_values($avData)) ];
                 } else {
                     $rows[] = [ $friendlyName, $SimaFile->$name ];
                 }
