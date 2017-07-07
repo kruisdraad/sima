@@ -21,8 +21,8 @@ class SearchCommand extends Command
 
         $this->addOption('filename', 'f', inputOption::VALUE_REQUIRED, 'Filename to search for, including extension' );
         $this->addOption('extension', 'e', inputOption::VALUE_REQUIRED, 'Extension to search for, with prefix dot (.)' );
-        $this->addOption('timefirst', 'tf', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was first seen' );
-        $this->addOption('timelast', 'tl', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was last seen' );
+        $this->addOption('timefirst', 'x', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was first seen' );
+        $this->addOption('timelast', 'y', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was last seen' );
         $this->addOption('really', 'r', inputOption::VALUE_NONE, 'Used without search options to confirm you really want to see the entire database scrolling on your screen');
     }
 
@@ -44,7 +44,26 @@ class SearchCommand extends Command
 
         $SimaFile = SimaFile::where('hash', '!=', null);
 
-        //TODO ADD FILTERS
+        /*
+         * Add additional filters
+         */
+        if((!empty($input->getOption('timefirst')) or !empty($input->getOption('timelast')))) {
+            if ($input->getOption('timefirst') === null or $input->getOption('timelast') === null) {
+                die('Error: --timefirst and --timelast must both be used for timefilters' . PHP_EOL);
+            }
+
+            //TODO Add time filters
+        }
+
+        if(!empty($input->getOption('filename'))) {
+            $SimaFile->where('name', 'LIKE', "%{$input->getOption('filename')}%", 'AND');
+        }
+
+        if(!empty($input->getOption('extension'))) {
+            $SimaFile->where('extension', 'LIKE', "%{$input->getOption('extension')}%", 'AND');
+        }
+
+
 
         /*
          * Output filtered table
