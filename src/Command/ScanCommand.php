@@ -138,6 +138,11 @@ class ScanCommand extends Command
 	$selection  = [];
         $finder = new Finder();
 
+        $sort = function (\SplFileInfo $a, \SplFileInfo $b) {
+            return strcmp($a->getRealPath(), $b->getRealPath());
+        };
+        $finder->sort($sort);
+
         $files  = $finder->files()->depth(' < 10')->name($extensions)->in($path);
 
 	foreach ($finder as $file) {
