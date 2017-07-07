@@ -95,9 +95,12 @@ class ScanCommand extends Command
                 $SimaFile = $SimaFile[0];
 
                 $knownFiles = json_decode($SimaFile->name, true);
+                if (!is_array($knownFiles)) {
+                    $knownFiles = [];
+                }
                 $newFiles = [ $file->file => true];
                 
-		$SimeFile->name = array_merge($knownFiles, $newFiles);
+		$SimaFile->name = json_encode(array_merge($knownFiles, $newFiles));
 
                 $SimaFile->count++;
 
