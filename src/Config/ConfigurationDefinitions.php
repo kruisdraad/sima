@@ -1,21 +1,21 @@
 <?php
+
 namespace Sima\Console\Config;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class ConfigurationDefinitions implements ConfigurationInterface
 {
-
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
 
         $configNode = $treeBuilder->root('sima');
 
-	$configNode->children()
+        $configNode->children()
             ->arrayNode('database')->children()
-                ->enumNode('driver')->values(array('mysql'))->end()
+                ->enumNode('driver')->values(['mysql'])->end()
                 ->scalarNode('host')->end()
                 ->scalarNode('port')->end()
                 ->scalarNode('database')->end()
@@ -51,5 +51,4 @@ class ConfigurationDefinitions implements ConfigurationInterface
 
         return $treeBuilder;
     }
-
 }

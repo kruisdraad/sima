@@ -1,13 +1,11 @@
 <?php
+
 namespace Sima\Console\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
 
 class File extends Model
 {
-
     protected $table = 'files';
 
     protected $fillable = [
@@ -27,5 +25,4 @@ class File extends Model
         'detection_rate',
         'scan_time',
     ];
-
 }

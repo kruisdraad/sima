@@ -2,12 +2,10 @@
 
 namespace Sima\Console\Command;
 
+use Sima\Console\Models\File as SimaFile;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Sima\Console\Models\File as SimaFile;
 use Virustotal;
 
 class CollectCommand extends Command
@@ -20,7 +18,6 @@ class CollectCommand extends Command
     {
         $this->setName('collect');
         $this->setDescription('Collects external information such as AV-Total information for all hashes');
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -35,17 +32,16 @@ class CollectCommand extends Command
          */
 
         $SimaFile = SimaFile::where('scan_time', '=', null)
-		->where('scan_time', '<=', date('Y-m-d H:i:s', (time() - 3600)), 'OR');
+        ->where('scan_time', '<=', date('Y-m-d H:i:s', (time() - 3600)), 'OR');
 
         if ($SimaFile->count() === 0) {
-            echo "No new hashes to request at Virustotal" . PHP_EOL;
+            echo 'No new hashes to request at Virustotal'.PHP_EOL;
 
             return false;
         } else {
-            foreach($SimaFile->get() as $file) {
+            foreach ($SimaFile->get() as $file) {
+                echo "Requesting data for hash {$file->hash}".PHP_EOL;
 
-                echo "Requesting data for hash {$file->hash}" . PHP_EOL;
-     
                 $report = $this->getVirustotalReport($file->hash);
 
                 if ($report) {
@@ -53,7 +49,7 @@ class CollectCommand extends Command
 
                     $summary = [];
 
-                    foreach($report['scans'] as $scanner => $scanData) {
+                    foreach ($report['scans'] as $scanner => $scanData) {
                         if ($scanData['detected']) {
                             $summary[$scanner] = $scanData['result'];
                         }
@@ -64,33 +60,30 @@ class CollectCommand extends Command
                 $file->scan_time = date('Y-m-d H:i:s');
                 $file->save();
             }
-	}
+        }
     }
 
     private function getVirustotalReport($resource)
     {
         //uncomment this to make everything look bad
-	//$resource = 'a771e484736b4ee8f478dfaa3d5194c10b9f983db86e02601d09a4e8c721a1e0';
+    //$resource = 'a771e484736b4ee8f478dfaa3d5194c10b9f983db86e02601d09a4e8c721a1e0';
 
-	try {
-            $api = new \VirusTotal\File($this->apiKey);
-            $response = $api->getReport($resource);
-        } catch(\Exception $e) {
-            die('No more API calls left, try again later'.PHP_EOL);
-		//error_log($e->getMessage());
-        } 
-
-	if ($response['response_code'] == '0') {
-	    return false;
-
-	} elseif ($response['response_code'] == '1') {
-            return $response;
-
-        } else {
-            echo('unknown repsonse');
-        }
-
-	die();
+    try {
+        $api = new \VirusTotal\File($this->apiKey);
+        $response = $api->getReport($resource);
+    } catch (\Exception $e) {
+        die('No more API calls left, try again later'.PHP_EOL);
+        //error_log($e->getMessage());
     }
 
+        if ($response['response_code'] == '0') {
+            return false;
+        } elseif ($response['response_code'] == '1') {
+            return $response;
+        } else {
+            echo 'unknown repsonse';
+        }
+
+        die();
+    }
 }

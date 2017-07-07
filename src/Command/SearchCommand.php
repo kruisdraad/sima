@@ -2,13 +2,12 @@
 
 namespace Sima\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 use Sima\Console\Models\File as SimaFile;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SearchCommand extends Command
 {
@@ -19,10 +18,10 @@ class SearchCommand extends Command
         $this->setName('search');
         $this->setDescription('Lists filesnames and hashes based on search arguments');
 
-        $this->addOption('filename', 'f', inputOption::VALUE_REQUIRED, 'Filename to search for, including extension' );
-        $this->addOption('extension', 'e', inputOption::VALUE_REQUIRED, 'Extension to search for, with prefix dot (.)' );
-        $this->addOption('timefirst', 'x', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was first seen' );
-        $this->addOption('timelast', 'y', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was last seen' );
+        $this->addOption('filename', 'f', inputOption::VALUE_REQUIRED, 'Filename to search for, including extension');
+        $this->addOption('extension', 'e', inputOption::VALUE_REQUIRED, 'Extension to search for, with prefix dot (.)');
+        $this->addOption('timefirst', 'x', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was first seen');
+        $this->addOption('timelast', 'y', inputOption::VALUE_REQUIRED, 'Time in YYYYMMDD or YYYYMMDD_HHMM when a hash was last seen');
         $this->addOption('really', 'r', inputOption::VALUE_NONE, 'Used without search options to confirm you really want to see the entire database scrolling on your screen');
     }
 
@@ -31,14 +30,15 @@ class SearchCommand extends Command
         global $configuration;
         $this->configuration = $configuration;
 
-        if(
+        if (
             empty($input->getOption('filename')) &&
             empty($input->getOption('extension')) &&
             empty($input->getOption('timefirst')) &&
             empty($input->getOption('timelast')) &&
             $input->getOption('really') === false
         ) {
-            echo "Not dumping entire database to console. Try help, adding search options or use --really to see magic on your console". PHP_EOL;
+            echo 'Not dumping entire database to console. Try help, adding search options or use --really to see magic on your console'.PHP_EOL;
+
             return false;
         }
 
@@ -47,29 +47,27 @@ class SearchCommand extends Command
         /*
          * Add additional filters
          */
-        if((!empty($input->getOption('timefirst')) or !empty($input->getOption('timelast')))) {
+        if ((!empty($input->getOption('timefirst')) or !empty($input->getOption('timelast')))) {
             if ($input->getOption('timefirst') === null or $input->getOption('timelast') === null) {
-                die('Error: --timefirst and --timelast must both be used for timefilters' . PHP_EOL);
+                die('Error: --timefirst and --timelast must both be used for timefilters'.PHP_EOL);
             }
 
             //TODO Add time filters
         }
 
-        if(!empty($input->getOption('filename'))) {
+        if (!empty($input->getOption('filename'))) {
             $SimaFile->where('name', 'LIKE', "%{$input->getOption('filename')}%", 'AND');
         }
 
-        if(!empty($input->getOption('extension'))) {
+        if (!empty($input->getOption('extension'))) {
             $SimaFile->where('extension', 'LIKE', "%{$input->getOption('extension')}%", 'AND');
         }
-
-
 
         /*
          * Output filtered table
          */
         if ($SimaFile->count() === 0) {
-            echo "Search did not yield any results, try harder" . PHP_EOL;
+            echo 'Search did not yield any results, try harder'.PHP_EOL;
 
             return false;
         } else {
@@ -78,7 +76,7 @@ class SearchCommand extends Command
             $table->setHeaders(['Hash', 'Filename', 'First seen', 'Count']);
 
             $rows = [];
-            foreach($SimaFile->get() as $file) {
+            foreach ($SimaFile->get() as $file) {
                 $rows[] = [
                     $file->hash,
                     implode(',', array_keys(json_decode($file->name, true))),
@@ -90,8 +88,5 @@ class SearchCommand extends Command
             $table->setRows($rows);
             $table->render();
         }
-
-                   
     }
-
 }
