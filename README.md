@@ -38,3 +38,11 @@ For Ubuntu, edit /etc/amavis/conf.d/15-av_scanners and add:
 This will ONLY start to collect information. If you change the '{}' into '-f {}' the
 filter policy will be applied. Do not enable filtering unless you have testing correct
 working of the system FIRST.
+
+
+## Stuff to do
+
+- Create central API to exchange hash information (replace AVTotal API)
+- Exchange hashes with mail vendors to build a large database
+- Create filtering and policy builder
+
