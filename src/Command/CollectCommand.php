@@ -71,8 +71,14 @@ class CollectCommand extends Command
     {
         //uncomment this to make everything look bad
 	//$resource = 'a771e484736b4ee8f478dfaa3d5194c10b9f983db86e02601d09a4e8c721a1e0';
-        $api = new \VirusTotal\File($this->apiKey);
-	$response = $api->getReport($resource);
+
+	try {
+            $api = new \VirusTotal\File($this->apiKey);
+            $response = $api->getReport($resource);
+        } catch(\Exception $e) {
+            die('No more API calls left, try again later');
+		//error_log($e->getMessage());
+        } 
 
 	if ($response['response_code'] == '0') {
 	    return false;
