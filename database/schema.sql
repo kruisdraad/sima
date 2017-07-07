@@ -35,6 +35,9 @@ CREATE TABLE `files` (
   `whitelisted` tinyint(1) NOT NULL DEFAULT '0',
   `blacklisted` tinyint(1) NOT NULL DEFAULT '0',
   `count` int(20) NOT NULL DEFAULT '1',
+  `scan_results` longtext,
+  `scan_time` timestamp NULL DEFAULT NULL,
+  `detection_rate` varchar(10) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -42,7 +45,7 @@ CREATE TABLE `files` (
   KEY `name` (`name`),
   KEY `whitelisted` (`whitelisted`),
   KEY `blacklisted` (`blacklisted`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=374 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,4 +66,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-06 12:22:45
+-- Dump completed on 2017-07-07 13:26:49
