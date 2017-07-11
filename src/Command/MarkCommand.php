@@ -9,10 +9,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MarkCommand extends Command
+class MarkCommand extends AbstractCommand
 {
-    private $config;
-
     protected function configure()
     {
         $this->setName('mark');
@@ -26,9 +24,6 @@ class MarkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        global $configuration;
-        $this->configuration = $configuration;
-
         if ($input->getOption('blacklist') && $input->getOption('whitelist')) {
             echo 'make up your mind'.PHP_EOL;
 

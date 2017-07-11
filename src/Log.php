@@ -11,8 +11,8 @@ class Log
 
     public function __construct()
     {
-        $this->logger = new Logger('consoleapp');
-        $this->logger->pushHandler(new StreamHandler(getenv('LOGFILE'), Logger::DEBUG));
+        $this->logger = new Logger('SIMA');
+        $this->logger->pushHandler(new StreamHandler('/var/log/sima.log', Logger::DEBUG));
     }
 
     public function info($message)

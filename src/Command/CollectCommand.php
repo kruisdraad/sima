@@ -8,10 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Virustotal;
 
-class CollectCommand extends Command
+class CollectCommand extends AbstractCommand
 {
-    private $config;
-
     private $apiKey;
 
     protected function configure()
@@ -22,8 +20,7 @@ class CollectCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        global $configuration;
-        $this->apiKey = $configuration['avtotal']['apikey'];
+        $this->apiKey = $this->config['avtotal']['apikey'];
 
         /*
          * We select all files that have not been checked AND everything not older then 48 hours.

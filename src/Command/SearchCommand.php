@@ -9,10 +9,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SearchCommand extends Command
+class SearchCommand extends AbstractCommand
 {
-    private $config;
-
     protected function configure()
     {
         $this->setName('search');
@@ -27,9 +25,6 @@ class SearchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        global $configuration;
-        $this->configuration = $configuration;
-
         if (
             empty($input->getOption('filename')) &&
             empty($input->getOption('extension')) &&

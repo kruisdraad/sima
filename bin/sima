@@ -72,7 +72,6 @@ if(is_link($selfCommand)) {
   $application->setDefaultCommand(basename($selfCommand), true);
 }
 
-
 /*
  * Run the application
  */

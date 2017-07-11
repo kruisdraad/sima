@@ -9,10 +9,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ShowCommand extends Command
+class ShowCommand extends AbstractCommand
 {
-    private $config;
-
     protected function configure()
     {
         $this->setName('show');
@@ -23,9 +21,6 @@ class ShowCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        global $configuration;
-        $this->configuration = $configuration;
-
         $SimaFile = SimaFile::where('hash', '=', $input->getArgument('hash'));
 
         /*
