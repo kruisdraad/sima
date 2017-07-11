@@ -3,7 +3,6 @@
 namespace Sima\Console\Command;
 
 use Sima\Console\Models\File as SimaFile;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Virustotal;

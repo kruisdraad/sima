@@ -2,8 +2,8 @@
 
 namespace Sima\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Sima\Console\Log;
+use Symfony\Component\Console\Command\Command;
 
 abstract class AbstractCommand extends Command
 {
@@ -17,7 +17,7 @@ abstract class AbstractCommand extends Command
     {
         parent::__construct();
 
-        $this->logger =  new Log();
+        $this->logger = new Log();
 
         global $configuration;
         $this->config = $configuration;
@@ -26,7 +26,7 @@ abstract class AbstractCommand extends Command
     public function log($msg)
     {
         $this->logger->info(
-            get_class($this) . ": {$msg}"
+            get_class($this).": {$msg}"
         );
 
         $this->debugLog($msg);
@@ -38,5 +38,4 @@ abstract class AbstractCommand extends Command
             echo $msg.PHP_EOL;
         }
     }
-
 }
