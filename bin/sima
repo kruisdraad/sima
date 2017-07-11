@@ -4,13 +4,13 @@
 //date_default_timezone_set("UTC");
 
 $files = array(
+  __DIR__ . '/../vendor/autoload.php',
   __DIR__ . '/../../vendor/autoload.php',
   __DIR__ . '/../../../../autoload.php',
   __DIR__ . '/../../../autoload.php',
   '../vendor/autoload.php',
   'vendor/autoload.php',  
 );
-
 
 foreach ($files as $file) {
     if (file_exists($file)) {

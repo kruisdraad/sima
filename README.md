@@ -1,6 +1,10 @@
-# sima
+# SIMA
 Scan Inventory for Mail Attachments
 
+# Disclaimer
+
+This tool is still under development, so you might missing or looking at incomplete commands.
+If you find any bugs, please report them.
 
 ## Installation
 
