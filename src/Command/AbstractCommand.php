@@ -26,7 +26,8 @@ abstract class AbstractCommand extends Command
     public function log($msg)
     {
         $this->logger->info(
-            get_class($this).": {$msg}"
+            substr(strrchr(get_class($this), '\\'), 1)
+            .": {$msg}"
         );
 
         $this->debugLog($msg);
