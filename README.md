@@ -29,14 +29,14 @@ For Ubuntu, edit /etc/amavis/conf.d/15-av_scanners and add:
 
 ```bash
 @av_scanners = (
-  ### MFD / Malware Filter Database
-  ['Malware Filter Database', ['/opt/sima/bin/scan'],
-    '{}', [0], qr/Found bad hash/m, qr/Found bad hash (.+) in/m ],
+  ### SIMA / Scan Inventory for Mail Attachments
+  ['SIMA', ['/opt/sima/bin/sima'],
+    'scan {}', [0], qr/Found bad hash/m, qr/Found bad hash (.+) in/m ],
 )
 ```
 
-This will ONLY start to collect information. If you change the '{}' into '-f {}' the
-filter policy will be applied. Do not enable filtering unless you have testing correct
+This will ONLY start to collect information. If you change the 'scan {}' into 'scan -f {}'
+the filter policy will be applied. Do not enable filtering unless you have testing correct
 working of the system FIRST.
 
 
