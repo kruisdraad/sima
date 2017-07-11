@@ -51,6 +51,8 @@ class ScanCommand extends AbstractCommand
 
     private function startScan($path, $filter)
     {
+        $curDate = date('Y-m-d H:i:s');
+
         $files = $this->getFiles($path, $filter);
 
         foreach ($files as $file) {
@@ -69,6 +71,8 @@ class ScanCommand extends AbstractCommand
                 $SimaFile->mime_extension = $file->mime;
                 $SimaFile->mime_detected = $file->realmime;
                 $SimaFile->size = $file->size;
+                $SimaFile->first_seen = $curDate;
+                $SimaFile->last_seen = $curDate;
 
                 $SimaFile->save();
             } elseif ($SimaFile->count() === 1) {
@@ -84,7 +88,7 @@ class ScanCommand extends AbstractCommand
 
                 $SimaFile->name = json_encode(array_merge($knownFiles, $newFiles));
 
-                $SimaFile->last_seen = date('Y-m-d H:i:s');
+                $SimaFile->last_seen = $curDate;
                 $SimaFile->count++;
 
                 $SimaFile->save();

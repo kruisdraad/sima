@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `files`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `files` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `first_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_seen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `first_seen` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00',
+  `last_seen` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00',
   `name` varchar(255) DEFAULT NULL,
   `extension` varchar(50) DEFAULT NULL,
   `hash` varchar(255) DEFAULT NULL,
@@ -38,14 +38,14 @@ CREATE TABLE `files` (
   `scan_results` longtext,
   `scan_time` timestamp NULL DEFAULT NULL,
   `detection_rate` varchar(10) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `hash` (`hash`),
   KEY `name` (`name`),
   KEY `whitelisted` (`whitelisted`),
   KEY `blacklisted` (`blacklisted`)
-) ENGINE=InnoDB AUTO_INCREMENT=539 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=547 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,4 +66,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-11 11:57:09
+-- Dump completed on 2017-07-11 12:15:27
