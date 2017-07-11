@@ -84,6 +84,7 @@ class ScanCommand extends AbstractCommand
 
                 $SimaFile->name = json_encode(array_merge($knownFiles, $newFiles));
 
+                $SimaFile->last_seen = date('Y-m-d H:i:s');
                 $SimaFile->count++;
 
                 $SimaFile->save();
